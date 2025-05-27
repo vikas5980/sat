@@ -248,6 +248,36 @@ void removeDuplicates(Node *head)
     }
 }
 
+// Function to check whether the list is palindrome.
+bool isPalindrome(Node *head) 
+{
+    // Your code here
+    stack<int> stk;
+    Node *curr = head;
+    
+    while(curr)
+    {
+        stk.push(curr->data);
+        curr = curr->next;
+    }
+    
+    curr = head;
+    
+    while(curr && stk.empty() == false)
+    {
+        int stData = stk.top();
+        stk.pop();
+        
+        if(curr->data != stData)
+        {
+            return false;
+        }
+        
+        curr = curr->next;
+    }
+    
+    return true;
+}
 
 int main() 
 {
@@ -301,7 +331,14 @@ int main()
     printf("print list recursivly.");
     printRecursivly(head);
 
-    
+    Node *phead = createNewNode(1);
+    phead->next = createNewNode(2);
+    phead->next->next = createNewNode(3);
+    phead->next->next->next = createNewNode(2);
+    phead->next->next->next->next = createNewNode(1);
+
+    printf("\nisPalindrome: %d ", isPalindrome(phead));
+
 
     return 0;
 }

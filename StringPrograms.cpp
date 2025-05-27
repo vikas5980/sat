@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 
@@ -112,6 +114,140 @@ char nonRepeatingChar(string &s)
     return '$';
 }
 
+// Validate an IP Address
+int isIpAddressValid(string& s)
+{
+    // code here
+    char c[5];
+    int n = 0, lZero = 0;
+    int j = 0;
+    
+    for(int i = 0; i <= s.length(); i++)
+    {
+        if (s[i] == '.' || s[i] == '\0')
+        {
+            c[j] = '\0';
+            
+            n = atoi(c);
+            lZero++;
+            
+            
+            if (s[i-1] == '.' && s[i] == '.')
+            {
+                return false;
+            }
+            
+            if (c[0] == '0' && strlen(c) > 1)
+            {
+                return false;
+            }  
+            
+            if (!((0 <= n) && (n <= 255)))
+            {
+                return false;
+            }
+            
+            j = 0;
+        }
+        else
+        {
+            c[j++] = s[i];
+        }
+    }
+    
+    if (lZero < 4 || 
+        lZero > 4)
+    {
+        return false;
+    }
+    
+    return true;
+}
+
+// Function to check if two strings are rotations of each other or not.
+bool areRotations(string &s1, string &s2) 
+{
+    // Your code here
+    int s2Len = s2.length();
+    int i = 0;
+    
+    if (s1.length() != s2.length())
+    {
+        return false;
+    }
+    
+    for (i = 0; i < s2Len; i++)
+    {
+        if (s1 == s2)
+            return true;
+            
+        /*char c = s2[s2Len - 1];
+        int size = 1;
+
+        while ((s2Len - size) > 0)
+        {
+            s2[s2Len - size] = s2[s2Len - (size+1)];
+            size++;
+        }
+        
+        s2[s2Len - size] = c;*/
+        std::rotate(s2.begin(), s2.end()-1, s2.end());  // algorithm rotate left -> right
+                                                        // default is left <- right
+    }
+    
+    
+    return false;
+}
+
+// Function to check if a string can be obtained by rotating
+// another string by exactly 2 places.
+bool isRotated(string& s1, string& s2) 
+{
+    // Your code here
+    string s3(s1); 
+
+    rotate(s1.begin(), s1.begin()+2, s1.end());
+    
+    if (s1 == s2)
+        return true;
+        
+    rotate(s3.rbegin(), s3.rbegin()+2, s3.rend());
+    
+    if (s3 == s2)
+        return true;
+        
+    return false;
+}
+
+int firstOccurence(string &txt, string &pat) 
+{
+    // Your code here
+    int idx = -1, i, j, k;
+    bool isPattenExist = true;
+    int l1 = txt.length(), l2 = pat.length();
+    
+    
+    for (i = 0; i < l1; i++)
+    {
+        isPattenExist = true;
+        for (j = 0, k = i; j < l2; j++, k++)
+        {
+            if (txt[k] != pat[j])
+            {
+                isPattenExist = false;
+                break;
+            }
+        }
+        
+        if (isPattenExist == true)
+        {
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
 int main()
 {
 
@@ -146,6 +282,20 @@ int main()
     string s5 = "geeksforgeeks";
     cout << "nonRepeatingChar: " << nonRepeatingChar(s5) << endl;
 
+    string s6 = "124.2.0.123";
+    cout << "isIpAddressValid: " << isIpAddressValid(s6) << endl;
+
+    string s7("abcd");
+    string s8("cdab");
+    cout << "areRotations: " << areRotations(s7, s8) << endl;
+
+    string s9 ("amazon");
+    string s10 ("azonam");
+    cout << "isRotated: " << isRotated(s9, s10) << endl;
+
+    string s11 ("GeeksForGeeks");
+    string s12 ("For");
+    cout << "firstOccurence: " << firstOccurence(s11, s12) << endl;
 
     return 1;
 }

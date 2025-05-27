@@ -30,6 +30,8 @@
         "sstream": "cpp",
         "system_error": "cpp",
         "set": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "text_encoding": "cpp",
+        "type_traits": "cpp"
     }
 }
