@@ -248,6 +248,69 @@ int firstOccurence(string &txt, string &pat)
     return -1;
 }
 
+void reverseString(string &s) 
+{
+    // code here
+    int start = 0;
+    int end = s.length()-1;
+
+    while (start < end)
+    {
+        char ch = s[start];
+        s[start] = s[end];
+        s[end] = ch;
+        start++;
+        end--;
+    }
+}
+
+void reversePairOfChrInString(string &s) 
+{
+    // code here
+    int start = 0;
+    int end = s.length();
+
+    while (start < end)
+    {
+        char ch = s[start];
+        s[start] = s[start+1];
+        s[start+1] = ch;
+        if (s[start] == '\0')
+        {
+            s[start] = ch;
+            s[start+1] = '\0';
+        }
+        start += 2;
+    }
+}
+
+// Find the length of the longest common substring among the given strings.
+int longestCommonSubstr(string& s1, string& s2) 
+{
+    // your code here
+    int l1 = s1.length();
+    int l2 = s2.length();
+    int i = 0, j = 0, curr = 0;
+    int maxlen = 0;
+    
+    for(i = 0; i < l1; i++)
+    {
+        for(j = 0; j < l2; j++)
+        {
+            curr = 0;
+            while((i + curr) < l1 &&
+                  (j + curr) < l2 &&
+                  s1[i+curr] == s2[j+curr])
+            {
+                curr++;
+            }
+            maxlen = max(maxlen,curr);
+        }
+    }
+    
+    return maxlen;
+}
+
 int main()
 {
 
@@ -297,5 +360,16 @@ int main()
     string s12 ("For");
     cout << "firstOccurence: " << firstOccurence(s11, s12) << endl;
 
+    string s13("vikasM");
+    reverseString(s13);
+    cout << "reverseString: " << s13 << endl;
+
+    string s14("vikasM");
+    reversePairOfChrInString(s14);
+    cout << "reversePairOfChrInString: " << s14 << endl;
+
+    string s15 ("ABCDGH");
+    string s16 ("ACDGHR");
+    cout << "longestCommonSubstr: " << longestCommonSubstr(s15, s16) << endl;  
     return 1;
 }

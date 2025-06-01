@@ -7,6 +7,7 @@
 #include <set>
 #include <stack>
 #include <algorithm>
+#include <unordered_set>
 
 using namespace std;
 
@@ -291,6 +292,87 @@ int findEquilibrium(vector<int> &arr)
     return -1;
 }
 
+// peak element because arr[i-1] < arr[i] > arr[i+1]
+// Consider the element before the first element and the element after the last element to be negative infinity
+int peakElement(vector<int> &arr) 
+{
+    // Your code here
+    int len = arr.size();
+    int i = 0, j = 0;
+    int ret = 0;
+    int prev = INT_MIN;
+    int last = INT_MAX;
+    
+    for (i = 0; i < len; i++)
+    {
+        if (i == 0)
+            prev = INT_MIN;
+        else
+            prev = arr[i-1];
+            
+        if (i == len-1)
+            last = INT_MIN;
+        else
+            last = arr[i+1];
+        
+        
+        if (prev < arr[i] && arr[i] > last)
+        {
+            ret = i;
+            return ret;
+        }
+    }
+    
+    return ret;
+}
+
+// Function to rotate an array by d elements in counter-clockwise direction.
+void rotateArr(vector<int>& arr, int d) 
+{
+    // code here
+    int len = arr.size();
+    int rotate = d%len;
+    int i = 0;
+    
+    if (rotate == 0)
+        return;
+        
+    while(rotate--)
+    {
+        int temp = arr[0];
+        for(i  = 0; i < len-1; i++)
+        {
+            arr[i] = arr[i+1];
+        }
+        arr[i] = temp;
+    }
+}
+
+// Function to check if b is a subset of a
+bool isSubset(vector<int> &a, vector<int> &b) 
+{
+    // Your code here
+    unordered_multiset<int> ms;
+    
+    for(auto e: a)
+    {
+        ms.insert(e);
+    }
+    
+    for (auto e1 = b.begin(); e1 != b.end(); e1++)
+    {
+        auto it = ms.find(*e1);
+        if(it == ms.end())
+        {
+            return false;
+        }
+        
+        ms.erase(it);
+    }
+
+    return true;
+}
+
 int main()
 {
     vector<int> arr1{1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
@@ -347,6 +429,21 @@ int main()
 
     vector<int> arr13{-7, 1, 5, 2, -4, 3, 0};
     cout << "\n findEquilibrium: " << findEquilibrium(arr13);
+
+    vector<int> arr14{1, 2, 4, 5, 7, 8, 3};
+    cout << "\n peakElement: " << peakElement(arr14);
+
+    vector<int> arr15{1, 2, 3, 4, 5};
+    cout << "\n rotateArr: ";
+    rotateArr(arr15, 2);
+    for (auto &i : arr15)
+    {
+        cout << i << " ";
+    }
+
+    vector<int> arr16{11, 7, 1, 13, 21, 3, 7, 3};
+    vector<int> arr17{11, 3, 7, 1, 7};
+    cout << "\n isSubset: " << isSubset(arr16, arr17);
 
     return 1;
 }

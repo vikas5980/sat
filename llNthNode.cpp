@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stack>
+#include <set>
+#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -248,6 +251,69 @@ void removeDuplicates(Node *head)
     }
 }
 
+//Remove Duplicates from an Unsorted Linked List
+void removeDuplicatesOptimization(Node *head)
+{
+    // your code goes here
+    set<int> s;
+    vector<int> v;
+    Node *temp = head; 
+    Node *prev = nullptr;
+    
+    while(temp)
+    {
+        int data = temp->data;
+        
+        if (s.find(data) == s.end())
+        {
+            s.insert(data);
+            
+            if (prev == nullptr)
+            {
+                prev = temp;
+            }
+            else
+            {
+                prev = prev->next;
+            }
+                
+            temp = temp->next;
+        }
+        else
+        {
+            Node *t = temp;
+            
+            prev->next = temp->next;
+            temp = temp->next;
+            free(t);
+        }
+    }
+}
+
+// Function to remove duplicates from sorted linked list.
+Node* removeDuplicatesFromSortedLL(Node* head) 
+{
+    Node *curr = head;
+
+    while(curr)
+    {
+        Node *nextNode = curr->next;
+            
+        if(curr->next != nullptr && curr->data == curr->next->data)
+        {
+            Node *temp = curr->next;
+            curr->next = curr->next->next;
+            free(temp);
+        }
+        else
+        {
+            curr = curr->next;
+        }
+    }
+    
+    return head;
+}
+
 // Function to check whether the list is palindrome.
 bool isPalindrome(Node *head) 
 {
@@ -277,6 +343,120 @@ bool isPalindrome(Node *head)
     }
     
     return true;
+}
+
+//Given the head of two singly linked lists, return the point where these two linked lists intersect.
+Node* intersectPoint(Node* head1, Node* head2) 
+{
+    //  Code Here
+    set <Node *> s;
+    Node *temp = head1;
+    
+    while(temp)
+    {
+        s.insert(temp);
+        
+        temp = temp->next;
+    }
+    
+    temp = head2;
+    
+    while (temp)
+    {
+        if (s.find(temp) != s.end())
+        {
+            return temp;
+        }
+        
+        temp = temp->next;
+    }
+    
+    return nullptr;
+}
+
+// Function to find the length of a loop in the linked list.
+int countNodesinLoop(Node *head) 
+{
+    // Code here
+    Node *slow = head, *fast = head;
+    bool isLoop = false;
+    int cnt = 0;
+    
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        
+        if (slow == fast)
+        {
+            isLoop = true;
+            break;
+        }
+    }
+    
+    if (isLoop == true)
+    {
+        slow = slow->next;
+        cnt++;
+        
+        while(slow != fast)
+        {
+            slow = slow->next;
+            cnt++;
+        }
+        
+    }
+    
+    return cnt;
+    
+}
+
+// Sort a linked list of 0s, 1s and 2s
+Node* segregate(Node* head) 
+{
+    // code here
+    multimap<int, Node *> m;
+    Node *temp = head;
+    
+    while(temp)
+    {
+        m.insert(pair<int, Node*>(temp->data, temp));
+        temp = temp->next;
+    }
+    
+    int i = 1;
+    for (auto &e : m)
+    {
+        if (i == 1)
+        {
+            head = e.second;
+            temp = head;
+        }
+        else
+        {
+            temp->next = e.second;
+            temp = temp->next;
+        }
+        i++;
+    }
+    temp->next = nullptr;
+    
+    return head;
+}
+
+void main2()
+{
+    Node *phead = createNewNode(2);
+    phead->next = createNewNode(0);
+    phead->next->next = createNewNode(1);
+    phead->next->next->next = createNewNode(0);
+    phead->next->next->next->next = createNewNode(2);
+    phead->next->next->next->next->next = createNewNode(1);
+    phead->next->next->next->next->next->next = createNewNode(0);
+
+    printLL(phead);
+    printLL(segregate(phead));
+
 }
 
 int main() 
@@ -332,13 +512,24 @@ int main()
     printRecursivly(head);
 
     Node *phead = createNewNode(1);
-    phead->next = createNewNode(2);
-    phead->next->next = createNewNode(3);
-    phead->next->next->next = createNewNode(2);
-    phead->next->next->next->next = createNewNode(1);
+    phead->next = createNewNode(1);
+    phead->next->next = createNewNode(2);
+    phead->next->next->next = createNewNode(3);
+    phead->next->next->next->next = createNewNode(2);
+    phead->next->next->next->next->next = createNewNode(1);
+    phead->next->next->next->next->next->next = createNewNode(1);
 
-    printf("\nisPalindrome: %d ", isPalindrome(phead));
+    printf("\nisPalindrome: %d \n", isPalindrome(phead));
 
+    printLL(phead);
+
+    removeDuplicatesFromSortedLL(phead);
+    printLL(phead);
+
+    removeDuplicatesOptimization(phead);
+    printLL(phead);
+
+    main2();
 
     return 0;
 }

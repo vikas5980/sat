@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
+using namespace std;
 
 typedef struct node 
 {
@@ -102,6 +104,25 @@ int countLeafNodes(Node *root)
     return countLeafNodes(root->left) + countLeafNodes(root->right);
 }
 
+void inOrderTraversal(Node* root, vector<int> &arr)
+{
+    if (root == nullptr)
+        return;
+    
+    inOrderTraversal(root->left, arr);
+    arr.push_back(root->data);
+    inOrderTraversal(root->right, arr);
+}
+
+int minValue(Node* root) 
+{
+    // Code here
+    vector<int> arr;
+    inOrderTraversal(root, arr);
+    
+    return arr[0];
+}
+
 int main() 
 {
     Node *root = createNewNode(1); 
@@ -131,6 +152,8 @@ int main()
     postOrderTraversal(root);
 
     printf("\n count leaf nodes : %d", countLeafNodes(root));
+
+    printf("\n minValue : %d", minValue(root));
 
     return 0;
 }
