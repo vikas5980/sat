@@ -444,6 +444,45 @@ Node* segregate(Node* head)
     return head;
 }
 
+/* Function to delete a node from a linked list */
+Node* deleteNode(Node* head, int x) 
+{
+    // code here
+    Node *temp = head, *t = nullptr;
+    Node *prev = nullptr;
+    int count = 1; 
+    
+    while(temp)
+    {
+        if (count == x)
+        {
+            if (head == temp)
+            {
+                t = temp->next;
+                head = t;
+                free(temp);
+                return head;
+            }
+            else
+            {
+                t = prev->next;
+                prev->next = temp->next;
+                temp = temp->next;
+                free(t);
+                return head;
+            }
+        }
+        else
+        {
+            prev = temp;
+            temp = temp->next;
+            count++;
+        }
+    }
+    
+    return head;
+}
+
 void main2()
 {
     Node *phead = createNewNode(2);
@@ -455,8 +494,9 @@ void main2()
     phead->next->next->next->next->next->next = createNewNode(0);
 
     printLL(phead);
-    printLL(segregate(phead));
-
+    printLL(deleteNode(phead, 2));
+    
+    printLL(segregate(phead));   
 }
 
 int main() 

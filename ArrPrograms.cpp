@@ -373,6 +373,120 @@ bool isSubset(vector<int> &a, vector<int> &b)
     return true;
 }
 
+// Row with max 1s
+int rowWithMax1s(vector<vector<int>> &arr) 
+{
+    // code here
+    int i = 0, j = 0, idx = 0;
+    int max1s = 0, mcnt = 0;
+    int rCnt = arr.size();
+    int cCnt = arr[0].size();
+    
+    
+    for (i = 0; i < rCnt; i++)
+    {
+        for (j = 0; j < cCnt; j++)
+        {
+            if (arr[i][j] == 1)
+            {
+                mcnt = cCnt - j;
+                break;
+            }
+        }
+        
+        if (max1s < mcnt )
+        {
+            idx = i;
+        }
+        max1s = max(max1s, mcnt);
+
+    }
+    
+    return idx;
+}
+
+vector<int> minAnd2ndMin(vector<int> &arr) 
+{
+    // code here
+    int i = 0, l = arr.size();
+    int min = arr[0], smin = arr[1];
+    vector<int> res;
+    
+    if (l <= 1)
+    {
+        res.push_back(-1);
+        return res;
+    }        
+    
+    for(i = 0; i < l; i++)
+    {
+        if (arr[i] < min)
+        {
+            smin = min;
+            min = arr[i];
+        }
+        else if (arr[i] < smin && arr[i] > min)
+        {
+            smin = arr[i];
+        }
+    }
+    
+    if (min == smin)
+    {
+        res.push_back(-1);
+        return res;
+    }
+       
+        
+    res.push_back(min);
+    res.push_back(smin);
+    
+    return res;
+}
+
+// Given two integers n and m (m != 0). The problem is to find the number
+// closest to n and divisible by m. If there is more than one such number,
+// then output the one having the maximum absolute value.
+int closestNumber(int n, int m) 
+{
+    // code here
+    int i = 0;
+    int retP = 0, retA = 0;
+
+    for (i = (n); i > INT_MIN; i--)
+    {
+        if (i%m == 0)
+        {
+            retP = i;
+            break;
+        }
+    }
+    
+    for (i = (n+1); i < INT_MAX; i++)
+    {
+        if (i%m == 0)
+        {
+            retA = i;
+            break;
+        }
+    }
+    
+    if (abs(n-retP) < abs(retA-n))
+    {
+        return retP;
+    }
+    else if (abs(n-retP) == abs(retA-n))
+    {
+    
+        if (abs(retP) > abs(retA))
+            return retP;
+        else
+            return retA;  
+    }
+    
+    return retA;
+}
+
 int main()
 {
     vector<int> arr1{1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
@@ -445,5 +559,17 @@ int main()
     vector<int> arr17{11, 3, 7, 1, 7};
     cout << "\n isSubset: " << isSubset(arr16, arr17);
 
+    vector<vector<int>> arr18{{0,1,1,1}, {0,0,1,1}, {1,1,1,1}, {0,0,0,0}};
+    cout << "\n rowWithMax1s: " << rowWithMax1s(arr18);
+
+    vector<int> arr19{2,2,2};    
+    cout << "\n minAnd2ndMin: ";
+    vector<int> arr20 = minAnd2ndMin(arr19);
+    for (auto &i : arr20)
+    {
+        cout << i << " ";
+    }
+
+    cout << "\n closestNumber: " << closestNumber(-15, 6);
     return 1;
 }

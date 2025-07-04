@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -123,6 +124,96 @@ int minValue(Node* root)
     return arr[0];
 }
 
+bool isBSTUtil(Node* node, int min, int max) 
+{
+    if (node == NULL)
+        return true;
+
+    if (node->data < min || node->data > max)
+        return false;
+
+    // Recursively check the left and 
+    // right subtrees with updated ranges
+    return isBSTUtil(node->left, min, node->data - 1) &&
+           isBSTUtil(node->right, node->data + 1, max);
+}
+
+bool isBST(Node* root) 
+{
+    return isBSTUtil(root, INT_MIN, INT_MAX);
+}
+
+bool search(Node* root, int x) 
+{
+    // Your code here
+    bool ret = false;
+    
+    if (root == nullptr)
+        return false;
+        
+    if (root != nullptr && root->data == x)
+        return true;
+        
+    ret = (search(root->left, x) || search(root->right, x));
+    
+    return ret;
+}
+
+vector<vector<int>> levelOrderTrav(Node *root)
+{
+    if (root == nullptr)
+        return {};
+        
+    queue<Node *> q;
+    vector<vector<int>> res;
+    
+    q.push(root);
+    int currLevel = 0;
+    
+    while(q.empty() == false)
+    {
+        int len = q.size();
+        res.push_back({});
+        
+        for (int i = 0; i < len; i++)
+        {
+            Node *n = q.front();
+            q.pop();
+        
+            res[currLevel].push_back(n->data);
+        
+            if (n->left != nullptr)
+                q.push(n->left);
+            
+            if (n->right != nullptr)
+                q.push(n->right);
+        }
+        
+        currLevel++;
+    }
+    
+    return res;
+}
+
+vector<int> leftView(Node *root) 
+{
+    // code here
+    int j = 0;
+    vector<int> res;
+    vector<vector<int>> mdv = levelOrderTrav(root);
+    
+    for(vector<int> sdv : mdv)
+    {
+        for(int i = 0; i < sdv.size(); i++)
+        {
+            res.push_back(sdv[i]);
+            break;
+        }
+    }
+    
+    return res;
+}
+
 int main() 
 {
     Node *root = createNewNode(1); 
@@ -154,6 +245,17 @@ int main()
     printf("\n count leaf nodes : %d", countLeafNodes(root));
 
     printf("\n minValue : %d", minValue(root));
+
+    printf("\n isBST : %d", isBST(root));
+
+    printf("\n search : %d", search(root, 4));
+
+    printf("\n leftView: ");
+    vector<int> arr1 = leftView(root);
+    for (auto &i : arr1)
+    {
+        printf("%d, ", i);
+    }
 
     return 0;
 }
