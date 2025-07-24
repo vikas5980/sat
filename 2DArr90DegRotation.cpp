@@ -11,7 +11,7 @@ vector<vector<int>> matrixRotate(vector<vector<int>> arr, int r, int c)
     {
         for (int j = 0; j < c; j++)
         {
-            temp[j][r-1-i] = arr[i][j];
+            temp[j][r-1-i] = arr[i][j];   //
         }
     }
 

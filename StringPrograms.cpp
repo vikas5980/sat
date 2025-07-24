@@ -621,6 +621,119 @@ string uncommonChars(string& s1, string& s2)
     return res;
 }
 
+//Given a string consisting of lowercase english alphabets.
+// Find the repeated character present first in the string.
+char firstRep(string s) 
+{
+    // code here.
+    unordered_map<char, int> ump;
+    string str;
+    
+    for (char ch: s)
+    {
+        ump[ch]++;
+        
+        if (ump[ch] == 1)
+            str.push_back(ch);
+    }
+    
+    for(char e: str)
+    {
+        auto it = ump.find(e);
+        if (it != ump.end() && it->second > 1)
+        {
+            return it->first;
+        }
+    }
+
+    return '#';
+}
+
+// Function to count the number of substrings that start and end with 1.
+long binarySubstring(int n, string a) 
+{
+
+    // Your code here
+    int i = 0, j = 0;
+    long cnt = 0;
+    
+    for (i = 0; i < n; i++)
+    {
+        if (a[i] == '0')
+        {
+            continue;
+        }
+        
+        for (j = (i+1); j < n; j++)
+        {
+            if (a[j] == '1')
+            {
+                cnt++;
+            }
+        }
+    }
+    
+    return cnt;
+}
+
+void printSquare(int n) 
+{
+    // code here
+    
+    for (int i = 1; i <= n*n; i++)
+    {
+        cout << "*" << " ";
+        if (i%n == 0)
+            cout << endl;
+    }
+    
+}
+
+bool areRotationsNew(string &s1, string &s2) 
+{
+    // code here
+    int len = s2.length();
+    int k = 0, j = 0;
+    bool isFChMatch = false;
+    
+    if (s1.size() != s2.size())
+        return false;
+     
+
+    for(int i = 0; i < len; )
+    {
+        cout << "i : " << i << " " << s2[i] << " " << s1[j] << " " << k << " " << len <<  endl;
+        if (s2[i] == s1[j] && k < len)
+        {
+            isFChMatch = true;
+            j++;
+            k++;
+            
+            
+            if (i != 0 && (i%(len-1) == 0))
+                i = 0;
+            else
+                i++;  
+
+            continue;
+        }
+        else if (k == len)
+        {
+            return true;
+        }
+        else if (isFChMatch == true)
+        {
+            j = 0; k = 0;
+            isFChMatch = false;
+            continue;
+            //return false;
+        }
+        i++;
+    }
+    
+    return false;
+}
+
 int main()
 {
 
@@ -706,5 +819,18 @@ int main()
     string s24 ("geeksforgeeks");
     string s25 ("geeksquiz");
     cout << "findSum: " << uncommonChars(s24, s25) << endl;  
+
+    string s26 ("yhkoryenollwpjwqquwigwnebvypnigmpsdjtjylu");
+    cout << "findSum: " << firstRep(s26) << endl;
+
+    string s27 ("11111");
+    cout << "binarySubstring: " << binarySubstring(5, s27) << endl;
+
+    printSquare(4);
+
+    string s28 ("geeksforgeeks");
+    string s29 ("forgeeksgeeks");
+    cout << "areRotationsNew: " << areRotationsNew(s28,s29) << endl;
+
     return 1;
 }

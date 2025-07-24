@@ -483,6 +483,313 @@ Node* deleteNode(Node* head, int x)
     return head;
 }
 
+Node* addTwoLists(Node* num1, Node* num2) 
+{
+    // code here
+    stack<int> s1;
+    stack<int> s2;
+    stack<int> s3;
+    int c = 0;
+    int i = 0, n3 = 0; 
+    
+    Node *n = num1;
+    Node *temp = nullptr, *start = nullptr;
+    
+    while(n != nullptr)
+    {
+        s1.push(n->data);
+        n = n->next;
+    }
+    
+    n = num2;
+    while(n != nullptr)
+    {
+        s2.push(n->data);
+        n = n->next;
+    }
+    
+    int s1S = s1.size();
+    int s2S = s2.size();
+    
+    for (i = 0; (i < s1S || i < s2S); i++)
+    {
+        int n1 = 0, n2 = 0, n3 = 0;
+        
+        if (i < s1S)
+        {
+            n1 = s1.top();
+            s1.pop();
+        }
+
+        if (i < s2S)
+        {
+            n2 = s2.top();
+            s2.pop();
+        }
+        
+        n3 = n1 + n2 + c;
+        if (n3 > 9)
+        {
+            c = 1;
+            n3 = n3%10;
+        }
+        else
+        {
+            c = 0;
+        }
+
+        s3.push(n3);
+    }
+    
+    if (c == 1)
+        s3.push(c);
+
+    for (i = 0; false == s3.empty();i++)
+    {
+        n3 = s3.top();
+        s3.pop();
+
+        Node *node = createNewNode(n3);
+
+        if (i == 0)
+        {
+            start = node;
+            temp = start;
+        }
+        else
+        {
+            temp->next = node;
+            temp = temp->next;
+        }
+    }
+    
+    return start;
+}
+
+//Delete nodes having greater value on right
+Node *compute(Node *head) 
+{
+    // your code goes here
+    Node *t = head;
+    Node *prev = nullptr;
+    bool noDeletion = false;
+    
+    while(t->next)
+    {
+        Node *temp = nullptr;
+        
+        if (t->data < t->next->data)
+        {
+            if (t == head)
+            {
+                temp = t;
+                head = head->next;
+                delete temp;
+                t = head;
+                noDeletion = true;
+            }
+            else
+            {
+                temp = t;
+                prev->next = temp->next;
+                delete temp;
+                t = prev->next;
+                noDeletion = true;
+            }
+        }
+        else
+        {
+            prev = t;
+            t = t->next;
+        }
+    }
+    
+    if (noDeletion == true)
+        compute(head);
+    else
+        return head;
+}
+
+Node* deleteMid(Node* head) 
+{
+    // Your Code Here
+    Node *f = head, *s = head, *p = nullptr;
+    Node *t;
+    
+    if (head->next == nullptr)
+        return nullptr;
+        
+    while(f != nullptr && f->next != nullptr)
+    {
+        p = s;
+        s = s->next;
+        f = f->next->next;
+    }
+    
+    
+    if (f != nullptr && f->next == nullptr) // odd number of nodes
+    {
+       p->next = s->next;
+       delete s;
+    }
+    else if (f == nullptr)   // even number of nodes
+    {
+        p->next = s->next;
+        delete s;
+    }
+    
+    return head;
+}
+
+// Should return head of the modified linked list
+Node* sortedInsert(Node* head, int key) 
+{
+    // Code here
+    Node *t = head;
+    Node *n = createNewNode(key);
+    
+    while(t)
+    {
+        if (t == head && key <= t->data)
+        {
+            n->next = t;
+            head = n;
+            return head;
+        }
+        else if (t->next == nullptr && key >= t->data)
+        {
+            t->next = n;
+            return head;
+        }
+        else if (t->data <= key && t->next->data >= key)
+        {
+            n->next = t->next;
+            t->next = n;
+            return head;
+        }
+        
+        t = t->next;
+    }
+    
+}
+
+// Given a sorted circular linked list, the task is to insert a new node in this
+// circular linked list so that it remains a sorted circular linked list.
+Node* sortedInsertInCircularLL(Node* head, int data) 
+{
+    // code here
+    Node *t = head;
+    Node *n = createNewNode(data);
+    
+    printf("sortedInsertInCircularLL : ");
+    do
+    {
+        printf(" %d, ", t->data);
+        if (t == head && data <= t->data)
+        {
+            n->next = t;
+            
+            while(t->next != head)
+            {
+                t = t->next;
+            }
+
+            t->next = n;
+            head = n;
+            return head;
+        }
+        else if (t->data < data && data <= t->next->data)
+        {
+            n->next = t->next;
+            t->next = n;
+            return head;
+        }
+        else if (t->next == head && data > t->data)
+        {
+            t->next = n;
+            n->next = head;
+            return head;
+        }
+        else
+        {
+            t = t->next;
+        }
+    }
+    while (t != head || t != nullptr);
+    
+    return head;
+}
+
+// Function to delete a node at given position.
+/*Node* deleteNode(Node* head, int x) 
+{
+    // Your code here
+    int cnt = 1;
+    
+    if (x == 1)
+    {
+        head = head->next;
+        head->prev = nullptr;
+        return head;
+    }
+    
+    Node *t = head;
+    while(t->next )
+    {
+        if (cnt == x)
+        {
+            Node *temp = t;
+            t = t->next;
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+            
+            
+            delete temp;
+            return head;
+        }
+        else
+        {
+            t = t->next;
+            cnt++;
+        }
+    }
+    
+    if (cnt == x)
+    {
+        t->prev->next = nullptr;
+        
+        delete t;
+    }
+    
+    return head;
+}*/
+
+void main4()
+{
+    Node *phead1 = createNewNode(4);
+    phead1->next = createNewNode(5);
+    phead1->next->next = createNewNode(6);
+    phead1->next->next->next = createNewNode(7);
+
+    phead1->next->next->next->next = phead1;
+
+    sortedInsertInCircularLL(phead1, 8);
+}
+
+void main3()
+{
+    Node *phead1 = createNewNode(4);
+    phead1->next = createNewNode(5);
+
+    Node *phead2 = createNewNode(9);
+    phead2->next = createNewNode(7);
+    phead2->next->next = createNewNode(5);
+
+    printLL(addTwoLists(phead1, phead2));
+
+    main4();
+}
+
 void main2()
 {
     Node *phead = createNewNode(2);
@@ -494,9 +801,17 @@ void main2()
     phead->next->next->next->next->next->next = createNewNode(0);
 
     printLL(phead);
+    printf("\ndeleteMid :");
+    printLL(deleteMid(phead));
+
     printLL(deleteNode(phead, 2));
     
-    printLL(segregate(phead));   
+    printLL(segregate(phead));
+    printf("\n compute :");
+    printLL(compute(phead));  
+
+
+    main3(); 
 }
 
 int main() 
@@ -565,6 +880,9 @@ int main()
 
     removeDuplicatesFromSortedLL(phead);
     printLL(phead);
+
+    printf("\nsortedInsert: ");
+    printLL(sortedInsert(phead, 4));
 
     removeDuplicatesOptimization(phead);
     printLL(phead);

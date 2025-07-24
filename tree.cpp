@@ -214,6 +214,60 @@ vector<int> leftView(Node *root)
     return res;
 }
 
+int height(Node *node)
+{
+    // Code here
+    if (node == nullptr)
+        return 0;
+        
+    int lh = height(node->left);
+    int rh = height(node->right);
+    
+    if (lh == -1 || rh == -1 || (abs(lh - rh) > 1))
+        return -1;
+        
+    return (max(lh, rh)+1);            
+}
+
+bool isBalanced(Node* root) 
+{
+    // Code here
+    return (height(root) > 0);
+}
+
+// Function to check if two trees are identical.
+bool isIdentical(Node *r1, Node *r2) 
+{
+    // Your Code here
+    if (!r1 || !r2)
+        return true;
+    
+    if (r1->data != r2->data)
+        return false;
+
+    bool rl = isIdentical(r1->left, r2->left);
+    bool rr = isIdentical(r1->right, r2->right);
+    
+    return (rl && rr);
+}
+
+
+void main1()
+{
+
+    Node *root1 = createNewNode(6); 
+    root1->left = createNewNode(3);
+    root1->right = createNewNode(3);
+    root1->left->left = createNewNode(4);
+
+    Node *root2 = createNewNode(6); 
+    root2->left = createNewNode(1);
+    root2->right = createNewNode(3);
+    root2->left->left = createNewNode(4);
+
+    printf("\n isIdentical: %d", isIdentical(root1, root2));
+}
+
 int main() 
 {
     Node *root = createNewNode(1); 
@@ -257,5 +311,8 @@ int main()
         printf("%d, ", i);
     }
 
+    printf("\n isBalanced: %d", isBalanced(root));
+
+    main1();
     return 0;
 }

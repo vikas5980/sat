@@ -487,6 +487,244 @@ int closestNumber(int n, int m)
     return retA;
 }
 
+vector<vector<int>> getPairs(vector<int>& arr) 
+{
+    // code here
+    vector<vector<int>> td;
+    set<int> st;
+    int k = 0, d = 0;
+    
+    // sort the arr
+    sort(arr.begin(), arr.end());
+    
+    for (auto e : arr)
+    {
+        st.insert(e);
+    }
+    
+    for(int i = 0; i < (arr.size()-1); i++)
+    {
+        if (arr[i] > 0)
+        {
+            break;
+        }
+        
+        if (arr[i] == arr[i+1])
+        {
+            if (arr[i] == 0 && d == 0)
+            {
+                d++;
+            }
+            else
+                continue;
+        }
+        else if (arr[i] == 0)
+        {
+            break;
+        }
+        
+        if (st.find(-1*arr[i]) != st.end())
+        {
+                td.push_back({});
+                td[k].push_back(arr[i]);
+                td[k++].push_back(-1*arr[i]);                
+        }
+    }
+    
+    return td;
+}
+
+// Function to count the number of digits in n that evenly divide n
+int evenlyDivides(int n) 
+{
+    // code here
+    int cnt = 0;
+    string str = to_string(n);
+    
+    
+    
+    for (int i = 0; i < str.length(); i++)
+    {
+        int num = str[i] - '0';
+        
+        
+        if (num > 0 && n%num == 0)
+            cnt++;
+    }
+    
+    return cnt;
+}
+
+// Function to find common elements in three arrays.
+vector<int> commonElements(vector<int> &arr1, vector<int> &arr2,
+                           vector<int> &arr3) 
+{
+    // Code Here
+    map<int,int> mp;
+    vector <int> vt;
+    
+    for (auto e1: arr1)
+    {
+        if (mp[e1] == 0)
+            mp[e1]++;
+    }
+    
+    for (auto e2: arr2)
+    {
+        if (mp[e2] == 1)
+            mp[e2]++;
+    }
+    
+    for (auto e3: arr3)
+    {
+        if (mp[e3] == 2)
+            mp[e3]++;
+    }
+    
+    for (auto e: mp)
+    {
+        if (e.second == 3)
+        {
+            vt.push_back(e.first);
+        }
+    }
+    
+    if (vt.size() == 0)
+        vt.push_back(-1);
+    
+    return vt;
+}
+
+void pushZerosToEnd(vector<int>& arr) 
+{
+    // code here
+    vector<int> vt;
+    
+    for(auto e: arr)
+    {
+        if (e != 0)
+        {
+            vt.push_back(e);
+        }
+    }
+    
+    int diff = arr.size() - vt.size();
+
+    for (int i = vt.size(); i < arr.size(); i++)
+    {
+        vt.push_back(0);
+    }
+    
+    swap(arr, vt);
+}
+
+void leftRotate(vector<int>& arr, int d) 
+{
+    // code here
+    int sz = arr.size();
+    int i = 0;
+    vector<int> temp;
+    
+    if (d > sz)
+    {
+        return;
+    }
+    
+    for (i = d; i < sz; i++)
+    {
+        temp.push_back(arr[i]);
+    }
+    
+    for (i = 0; i < d; i++)
+    {
+        temp.push_back(arr[i]);
+    }
+    
+    swap(arr, temp);
+}
+
+// Problem: Trapping Rain Water
+int trappingRainWater(vector<int> &arr) 
+{
+    // code here
+    int ln = arr.size();
+    int i = 0, j = 0, res = 0;
+    
+    
+    for(i = 1; i < (ln-1); i++)
+    {
+        // left
+        int left = arr[i-1];
+        for(j = i; j >= 0 ; j--)
+        {
+            left = max(left, arr[j]);
+        }
+        
+        // right
+        int right = arr[i+1];
+        for(j = i; j < ln ; j++)
+        {
+            right = max(right, arr[j]);
+        }
+        
+        res = res + (min(left, right) - arr[i]);
+    }
+    
+    return res;
+}
+
+// Bubble Sort
+void bubbleSort(vector<int>& arr) 
+{
+    // code here
+    int ln = arr.size();
+    bool isSwaped = false;
+    
+    for (int i = 0; i < ln-1; i++)
+    {
+        isSwaped = false;
+        for (int j = i+1; j < ln; j++)
+        {
+            if(arr[i] > arr[j])
+            {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                
+                isSwaped = true;
+            }
+        }
+    }
+}
+
+// Find Kth Rotation
+int findKRotation(vector<int> &arr) 
+{
+    // Code Here
+    int ln  = arr.size();
+    set<int> st;
+    int ret = 0;
+    
+    for (auto e: arr)
+    {
+        st.insert(e);
+    }
+    
+    auto it = st.begin();
+    int ele = *it;
+    
+    for (int i = 0; i < ln; i++)
+    {
+        if (ele == arr[i])
+        {
+            ret = i;
+            break;
+        }
+    }
+    
+    return ret;
+}
+
 int main()
 {
     vector<int> arr1{1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
@@ -571,5 +809,51 @@ int main()
     }
 
     cout << "\n closestNumber: " << closestNumber(-15, 6);
+
+    vector<int> arr21{-1, 0, 1, 2, -1, -4};
+    getPairs(arr20);
+
+    cout << "\n evenlyDivides: " << evenlyDivides(12);
+
+    vector<int> arr22{1, 5, 10, 20, 40, 80};
+    vector<int> arr23{6, 7, 20, 80, 100};
+    vector<int> arr24{3, 4, 15, 20, 30, 70, 80, 120};    
+    cout << "\n commonElements: ";
+    vector<int> arr25 =  commonElements(arr22, arr23, arr24);
+    for (auto &i : arr25)
+    {
+        cout << i << " ";
+    }
+
+    vector<int> arr26{0, 0, 0, 3, 1, 4};
+    pushZerosToEnd(arr26);
+    cout << "\n pushZerosToEnd: ";
+    for (auto &i : arr26)
+    {
+        cout << i << " ";
+    }
+
+    vector<int> arr27{-1, -2, -3, 4, 5, 6, 7};
+    leftRotate(arr27, 3);
+    cout << "\n leftRotate: ";
+    for (auto &i : arr27)
+    {
+        cout << i << " ";
+    }
+
+    vector<int> arr28{3, 0, 1, 0, 4, 0, 2};
+    cout << "\n trappingRainWater: " << trappingRainWater(arr28);    
+
+    vector<int> arr29{10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    bubbleSort(arr29);
+    cout << "\n bubbleSort: ";
+    for (auto &i : arr29)
+    {
+        cout << i << " ";
+    }
+
+    vector<int> arr30{5, 1, 2, 3, 4};
+    cout << "\n findKRotation: " << findKRotation(arr30);
+
     return 1;
 }
